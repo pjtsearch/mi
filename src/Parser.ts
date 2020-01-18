@@ -58,7 +58,7 @@ export default class Parser {
   }                                                 
 
   multiplication():Expr {                   
-    let expr:Expr = this.exponent();                            
+    let expr:Expr = this.unary();                            
     debug(this.current,"multiplication",expr)
 
     while (this.match(SLASH, STAR)) {                    
@@ -83,21 +83,10 @@ export default class Parser {
     }
 
     return expr;                                    
-  }           
-  
-  exponent():Expr{
-    let expr:Expr = this.unary();                            
-    debug(this.current,"exponent",expr)
-    while (this.match(CIRCUMFLEX)) {
-      let operator:Token = this.previous();                  
-      let right:Expr = this.unary();
-      expr = new Expr.Binary(expr, operator, right);
-    }
-    
-    return expr
   }
   
   unary():Expr {   
+		let expr = this.primary()
     debug(this.current,"unary")
     
     if (this.match(MINUS)) {                
@@ -105,8 +94,14 @@ export default class Parser {
       let right:Expr = this.unary();                  
       return new Expr.Unary(operator, right);
     }
+		
+		while (this.match(CIRCUMFLEX)) {
+      let operator:Token = this.previous();                  
+      let right:Expr = this.unary();
+      expr = new Expr.Binary(expr, operator, right);
+    }
 
-    return this.primary();                        
+    return expr;                        
   }               
   
   primary():Expr {

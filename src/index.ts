@@ -7,5 +7,6 @@ if (Deno.args[0] === "ast"){
   var parser = new Parser(tokens)
 
   let answer = JSON.stringify(parser.parse(),null,1)
+ 	if (Deno.args.includes("--tokens") || Deno.args.includes("-t"))console.log(tokens)
   console.log(answer)
 }

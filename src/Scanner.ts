@@ -112,8 +112,9 @@ export default class Scanner {
 
     this.addToken(NUMBER,Number(this.source.substring(this.start, this.current)));
   }      
-  variable():void {                
-    while (this.isAlpha(this.peek())) this.advance();
+  variable():void {
+		// DON'T JOIN SINGLE LETTERS
+    //while (this.isAlpha(this.peek())) this.advance();
     
     let text:string = this.source.substring(this.start, this.current);
 
