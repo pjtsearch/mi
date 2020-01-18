@@ -1,0 +1,8 @@
+#!/bin/bash
+if [ "$1" == "dev" ]; then
+  deno ./src/index.ts ${@:2};
+elif [ "$1" == "build" ]; then
+  deno bundle ./src/index.ts ./dist/index.js 
+elif [ "$1" == "start" ]; then
+  deno ./dist/index.js ${@:2};
+fi
