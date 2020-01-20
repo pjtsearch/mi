@@ -14,7 +14,8 @@ export default class Parser {
   }                     
   // RULES
   expression():Expr {
-    return this.equality();       
+    //return this.equality();       
+		return this.addition()
   }
   
   // DOES EQUALITY APPLY, SHOULD ONLY USE ASSIGNMENT?
