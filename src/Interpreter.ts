@@ -27,6 +27,10 @@ export default class Interpreter {
 			return vars[expr.value.lexeme]
 		}else if (expr instanceof Expr.Grouping){
 			return this.interpret(expr.expression,vars)
+		}else if (expr instanceof Expr.Unary){
+			if (expr.operator.type === MINUS){
+				return -1 * this.interpret(expr.right,vars)
+			}
 		}
 	}
 }

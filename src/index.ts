@@ -1,6 +1,7 @@
 import Scanner from "./Scanner.ts"
 import Parser from "./Parser.ts"
 import Interpreter from "./Interpreter.ts"
+import debug from "./debug.ts"
 
 if (Deno.args[0] === "ast"){
   var scanner = new Scanner(Deno.args[1])
@@ -15,7 +16,7 @@ if (Deno.args[0] === "ast"){
   let tokens = scanner.scanTokens()
   let parser = new Parser(tokens)
   let parsed = parser.parse()
-	console.log(JSON.stringify(parsed,null,1))
+	debug(JSON.stringify(parsed,null,1))
 	let interpreter = new Interpreter(parsed)
 	let answer = interpreter.interpret(undefined,{x:1})
 	console.log(answer)
