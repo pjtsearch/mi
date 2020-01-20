@@ -25,6 +25,8 @@ export default class Interpreter {
 		}else if (expr instanceof Expr.Literal){
 			if (expr.value.type === NUMBER) return expr.value.literal
 			return vars[expr.value.lexeme]
+		}else if (expr instanceof Expr.Grouping){
+			return this.interpret(expr.expression,vars)
 		}
 	}
 }
