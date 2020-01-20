@@ -15,7 +15,7 @@ if (Deno.args[0] === "ast"){
   let tokens = scanner.scanTokens()
   let parser = new Parser(tokens)
   let parsed = parser.parse()
-	
+	console.log(JSON.stringify(parsed,null,1))
 	let interpreter = new Interpreter(parsed)
 	let answer = interpreter.interpret(undefined,{x:1})
 	console.log(answer)

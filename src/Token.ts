@@ -3,9 +3,9 @@ import TokenType from "./TokenType.ts"
 export default class Token {                                                     
   type:TokenType;                                           
   lexeme:string;                                            
-  literal:number | string;
+  literal:Object;
 
-  constructor(type:TokenType, lexeme:string, literal:number | string) {
+  constructor(type:TokenType, lexeme:string, literal:Object) {
     this.type = type;                                             
     this.lexeme = lexeme;                                         
     this.literal = literal;                                          

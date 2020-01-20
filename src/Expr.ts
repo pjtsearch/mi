@@ -19,8 +19,8 @@ export class Grouping {
 }
 
 export class Literal {
-  value:number | string;
-  constructor(value:number | string) {
+  value:Token;
+  constructor(value:Token) {
     this.value = value;
   }
 }

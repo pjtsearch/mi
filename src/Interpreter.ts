@@ -15,10 +15,16 @@ export default class Interpreter {
 		if (expr instanceof Expr.Binary){
 			if (expr.operator.type === PLUS){
 				return this.interpret(expr.left,vars)+this.interpret(expr.right,vars)
+			}else if (expr.operator.type === MINUS){
+				return this.interpret(expr.left,vars)-this.interpret(expr.right,vars)
+			}else if (expr.operator.type === STAR){
+				return this.interpret(expr.left,vars)*this.interpret(expr.right,vars)
+			}else if (expr.operator.type === SLASH){
+				return this.interpret(expr.left,vars)/this.interpret(expr.right,vars)
 			}
 		}else if (expr instanceof Expr.Literal){
-			if (typeof expr.value === "number") return expr.value
-			return vars[expr.value]
+			if (expr.value.type === NUMBER) return expr.value.literal
+			return vars[expr.value.lexeme]
 		}
 	}
 }

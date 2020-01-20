@@ -48,7 +48,7 @@ export default class Parser {
     let expr:Expr = this.multiplication();
     debug(this.current,"addition",expr)
     
-    while (this.match(MINUS, PLUS)) {                    
+    while (this.match(MINUS, PLUS)) {
       let operator:Token = this.previous();                  
       let right:Expr = this.multiplication();
       expr = new Expr.Binary(expr, operator, right);
@@ -58,7 +58,7 @@ export default class Parser {
   }                                                 
 
   multiplication():Expr {                   
-    let expr:Expr = this.unary();                            
+    let expr:Expr = this.exponent();                            
     debug(this.current,"multiplication",expr)
 
     while (this.match(SLASH, STAR)) {                    
@@ -84,9 +84,20 @@ export default class Parser {
 
     return expr;                                    
   }
+	
+	exponent():Expr{
+		let expr = this.unary()
+		while (this.match(CIRCUMFLEX)) {
+			let left = expr
+      let operator:Token = this.previous();                  
+      let right:Expr = this.unary();
+      expr = new Expr.Binary(left, operator, right);
+    }
+		return expr
+	}
   
   unary():Expr {   
-		let expr = this.primary()
+		//let expr = this.primary()
     debug(this.current,"unary")
     
     if (this.match(MINUS)) {                
@@ -94,25 +105,22 @@ export default class Parser {
       let right:Expr = this.unary();                  
       return new Expr.Unary(operator, right);
     }
-		
-		while (this.match(CIRCUMFLEX)) {
-      let operator:Token = this.previous();                  
-      let right:Expr = this.unary();
-      expr = new Expr.Binary(expr, operator, right);
-    }
-
-    return expr;                        
+		//console.log(this.current++,this.peek())
+		//this.current++
+		//if (this.tokens[this.current+1].type == CIRCUMFLEX) {
+    //return expr; 
+		return this.primary()
   }               
   
   primary():Expr {
     if (this.match(NUMBER)) {  
       debug(this.current,"primary NUMBER")
-      return new Expr.Literal(this.previous().literal);         
+      return new Expr.Literal(this.previous());         
     }                 
     
     if (this.match(VARIABLE)) {
       debug(this.current,"primary VARIABLE")
-      return new Expr.Literal(this.previous().lexeme);  
+      return new Expr.Literal(this.previous());  
     }
 
     if (this.match(LEFT_PAREN)) {                               
