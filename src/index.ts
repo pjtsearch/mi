@@ -18,6 +18,6 @@ if (Deno.args[0] === "ast"){
   let parsed = parser.parse()
 	debug(JSON.stringify(parsed,null,1))
 	let interpreter = new Interpreter(parsed)
-	let answer = interpreter.interpret(undefined,{x:1})
+	let answer = interpreter.interpret({x:1})
 	console.log(answer)
 }
