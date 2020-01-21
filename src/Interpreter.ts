@@ -27,6 +27,8 @@ export default class Interpreter {
 				return this.interpretOne(expr.left,vars)*this.interpretOne(expr.right,vars)
 			}else if (expr.operator.type === SLASH){
 				return this.interpretOne(expr.left,vars)/this.interpretOne(expr.right,vars)
+			}else if (expr.operator.type === CIRCUMFLEX){
+				return Math.pow(this.interpretOne(expr.left,vars),this.interpretOne(expr.right,vars))
 			}
 		}else if (expr instanceof Expr.Literal){
 			if (expr.value.type === NUMBER) return expr.value.literal

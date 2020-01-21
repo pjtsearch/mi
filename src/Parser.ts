@@ -80,7 +80,7 @@ export default class Parser {
 
     while (this.match(SLASH, STAR)) {                    
       let operator:Token = this.previous();                  
-      let right:Expr = this.unary();                         
+      let right:Expr = this.exponent();                         
       expr = new Expr.Binary(expr, operator, right);
     }                   
     
@@ -88,23 +88,29 @@ export default class Parser {
       let operator:Token = new Token(STAR, "*", undefined,this.peek().line);  
       //reverse to get variable, becuase match advances
       this.current--
-      let right:Expr = this.unary();                         
+      let right:Expr = this.exponent();                         
       expr = new Expr.Binary(expr, operator, right);
     }
     
     while (this.match(LEFT_PAREN)) {
       let operator:Token = new Token(STAR, "*", undefined,this.peek().line);
       this.current--
-      let right:Expr = this.unary();   
+      let right:Expr = this.exponent();   
       expr = new Expr.Binary(expr, operator, right);
     }
 
     return expr;                                    
   }
 	
+	//
+	//
+	//WRONG ORDER
+	//
+	//
 	exponent():Expr{
 		let expr = this.unary()
 		while (this.match(CIRCUMFLEX)) {
+			console.log("exponent",this.current,expr)
 			let left = expr
       let operator:Token = this.previous();                  
       let right:Expr = this.unary();
@@ -117,11 +123,20 @@ export default class Parser {
 		//let expr = this.primary()
     debug(this.current,"unary")
     
-    if (this.match(MINUS)) {                
+    if (this.match(MINUS)) {           
       let operator:Token = this.previous();           
       let right:Expr = this.unary();                  
       return new Expr.Unary(operator, right);
     }
+		/*if (this.check(CIRCUMFLEX)) {
+			this.current--
+			let left = this.primary()
+			console.log("exponent",this.current,left)
+			this.advance()
+      let operator:Token = this.previous();                  
+      let right:Expr = this.unary();
+      return new Expr.Binary(left, operator, right);
+    }*/
 		//console.log(this.current++,this.peek())
 		//this.current++
 		//if (this.tokens[this.current+1].type == CIRCUMFLEX) {
@@ -139,6 +154,15 @@ export default class Parser {
       debug(this.current,"primary VARIABLE")
       return new Expr.Literal(this.previous());  
     }
+		
+		//let expr = this.unary()
+		/*if (this.match(CIRCUMFLEX)) {
+			let left = this.expression();
+      let operator:Token = this.previous();                  
+      let right:Expr = this.unary();
+      return new Expr.Binary(left, operator, right);
+    }*/
+		
 
     if (this.match(LEFT_PAREN)) {                               
       let expr:Expr = this.expression();   
