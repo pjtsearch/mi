@@ -11,7 +11,9 @@
   GREATER, GREATER_EQUAL,                          
   LESS, LESS_EQUAL,   
   //Keywords
-  SIN,COS,TAN
+  SIN,COS,TAN,
+	 
+	EOF
 }
 export default TokenType
 

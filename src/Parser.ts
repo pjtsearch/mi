@@ -3,7 +3,7 @@ import TokenType,{keywords} from "./TokenType.ts"
 import Expr from "./Expr.ts"
 import debug from "./debug.ts"
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN} = TokenType
+let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,EOF} = TokenType
 
 export default class Parser {                                         
   tokens:Token[];                    
@@ -17,7 +17,7 @@ export default class Parser {
     //return this.equality();       
 		return this.addition()
   }
-  
+  /*
   // DOES EQUALITY APPLY, SHOULD ONLY USE ASSIGNMENT?
   equality():Expr {                         
     let expr:Expr = this.comparison();
@@ -44,7 +44,7 @@ export default class Parser {
 
     return expr;                                             
   }        
-  
+  */
   addition():Expr {                         
     let expr:Expr = this.multiplication();
     debug(this.current,"addition",expr)
@@ -69,7 +69,7 @@ export default class Parser {
     }                   
     
     while (this.match(VARIABLE)) {
-      let operator:Token = new Token(STAR, "*", undefined);  
+      let operator:Token = new Token(STAR, "*", undefined,this.peek().line);  
       //reverse to get variable, becuase match advances
       this.current--
       let right:Expr = this.unary();                         
@@ -77,7 +77,7 @@ export default class Parser {
     }
     
     while (this.match(LEFT_PAREN)) {
-      let operator:Token = new Token(STAR, "*", undefined);
+      let operator:Token = new Token(STAR, "*", undefined,this.peek().line);
       this.current--
       let right:Expr = this.unary();   
       expr = new Expr.Binary(expr, operator, right);
@@ -172,9 +172,9 @@ export default class Parser {
   //                            |
   //                            v
   isAtEnd():boolean {      
-  //return this.peek().type == EOF;     
-    if (this.current == this.tokens.length) return true;     
-    return false
+    return this.peek().type == EOF;     
+    //if (this.current == this.tokens.length) return true;     
+    //return false
   }
 
   peek():Token {      

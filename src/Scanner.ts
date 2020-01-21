@@ -1,13 +1,14 @@
 import Token from "./Token.ts"
 import TokenType,{keywords} from "./TokenType.ts"
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN} = TokenType
+let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,EOF} = TokenType
 
 export default class Scanner {   
   source:string;
   tokens:Token[] = [];    
   start:number = 0;                               
-  current:number = 0;                          
+  current:number = 0;    
+	line:number = 1;  
   constructor(source:string){                              
     this.source = source;                       
   }
@@ -17,6 +18,7 @@ export default class Scanner {
       this.start = this.current;                              
       this.scanToken();                                  
     }
+		this.tokens.push(new Token(EOF, "", null, this.line));    
     return this.tokens;                                  
   }    
   isAtEnd():boolean {         
@@ -40,6 +42,9 @@ export default class Scanner {
       case '\r':                                   
       case '\t':                   
         break;
+			case '\n':                                   
+        this.line++;                                    
+        break;   
         
       default:             
         if (this.isDigit(char)) {                          
@@ -70,7 +75,7 @@ export default class Scanner {
 
   addToken(type:TokenType, literal?:number | string):void {
     let text:string = this.source.substring(this.start, this.current);      
-    this.tokens.push(new Token(type, text, literal));    
+    this.tokens.push(new Token(type, text, literal, this.line));    
   }               
   match(expected:string):boolean {                 
     if (this.isAtEnd()) return false;                         
