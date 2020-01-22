@@ -109,8 +109,8 @@ export default class Parser {
 	//
 	exponent():Expr{
 		let expr = this.unary()
+		debug(this.current,"exponent",expr)
 		while (this.match(CIRCUMFLEX)) {
-			console.log("exponent",this.current,expr)
 			let left = expr
       let operator:Token = this.previous();                  
       let right:Expr = this.unary();
