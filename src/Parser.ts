@@ -20,19 +20,37 @@ export default class Parser {
   }
 	
 	statement():Stmt {
-    return this.expressionStatement();             
+		if (this.check(VARIABLE) && this.checkNext(EQUAL)){
+			return this.varStatement()
+		}else{
+    	return this.expressionStatement();      
+		}
   }             
 	
 	expressionStatement():Stmt {                 
     let expr = this.expression();
-		if (this.peek().type !== ENTER){
-			if (this.peek().type !== EOF) console.error("Expect ENTER after expression.")
+		if (!this.check(ENTER)){
+			if (!this.check(EOF)) console.error("Expect ENTER after expression.")
 		}else{
 			this.consume(ENTER, "Expect ENTER after expression.")
 		}
 		
     return new Stmt.Expression(expr);                  
-  }                                                    
+  }                
+	varStatement():Stmt {
+		let name:Token = this.consume(VARIABLE, "Expect variable name.");
+		// advance equal
+		this.advance()
+
+    let initializer:Expr = this.expression();                                                 
+
+    if (!this.check(ENTER)){
+			if (!this.check(EOF)) console.error("Expect ENTER after expression.")
+		}else{
+			this.consume(ENTER, "Expect ENTER after expression.")
+		}
+    return new Stmt.Var(name, initializer);
+	}
   /*
   // DOES EQUALITY APPLY, SHOULD ONLY USE ASSIGNMENT?
   equality():Expr {                         
@@ -135,7 +153,7 @@ export default class Parser {
     
     if (this.match(VARIABLE)) {
       debug(this.current,"primary VARIABLE")
-      return new Expr.Literal(this.previous());  
+      return new Stmt.Var(this.previous());  
     }
 		
     if (this.match(LEFT_PAREN)) {                               
@@ -164,7 +182,12 @@ export default class Parser {
   check(type:TokenType):boolean {
     if (this.isAtEnd()) return false;         
     return this.peek().type == type;          
-  }                     
+  }  
+	
+	checkNext(type:TokenType):boolean {
+    if (this.isAtEnd() || this.isNextAtEnd()) return false;         
+    return this.peekNext().type == type;          
+  }    
   
   advance():Token {   
     if (!this.isAtEnd()) this.current++;
@@ -173,14 +196,20 @@ export default class Parser {
   
   isAtEnd():boolean {      
     return this.peek().type == EOF;     
-    //if (this.current == this.tokens.length) return true;     
-    //return false
+  }
+	
+	isNextAtEnd():boolean {      
+    return this.peekNext().type == EOF; 
   }
 
   peek():Token {      
     
     return this.tokens[this.current];    
-  }                                
+  }              
+	
+	peekNext():Token {   
+    return this.tokens[this.current+1];    
+  }  
 
   previous():Token {       
     return this.tokens[this.current - 1];

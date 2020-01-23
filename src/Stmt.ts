@@ -22,7 +22,7 @@ export class Function {
 export class Var {
 	name:Token;
 	initializer:Expr;
-	constructor(name:Token, initializer:Expr) {
+	constructor(name:Token, initializer?:Expr) {
 		this.name = name;
 		this.initializer = initializer;
 	}
