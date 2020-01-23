@@ -18,6 +18,8 @@ export default class Interpreter {
 		//debug("typeof expr: ",typeof expr)
 		if (expr instanceof Stmt.Expression){
 			return this.interpretOne(expr.expression,vars)
+		}else if (expr instanceof Stmt.Var){
+			if (!expr.initializer) return vars[expr.name.lexeme]
 		}else if (expr instanceof Expr.Binary){
 			if (expr.operator.type === PLUS){
 				return this.interpretOne(expr.left,vars)+this.interpretOne(expr.right,vars)
@@ -31,8 +33,7 @@ export default class Interpreter {
 				return Math.pow(this.interpretOne(expr.left,vars),this.interpretOne(expr.right,vars))
 			}
 		}else if (expr instanceof Expr.Literal){
-			if (expr.value.type === NUMBER) return expr.value.literal
-			return vars[expr.value.lexeme]
+			return expr.value.literal
 		}else if (expr instanceof Expr.Grouping){
 			return this.interpretOne(expr.expression,vars)
 		}else if (expr instanceof Expr.Unary){

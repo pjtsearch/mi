@@ -29,10 +29,11 @@ export default class Parser {
 	
 	expressionStatement():Stmt {                 
     let expr = this.expression();
-		if (!this.check(ENTER)){
-			if (!this.check(EOF)) console.error("Expect ENTER after expression.")
+		//need peek becuase otherwise returns false becuase EOF
+		if (!this.check(ENTER) && this.peek().type != EOF){
+			console.error("Expect ENTER or EOF after expression.")
 		}else{
-			this.consume(ENTER, "Expect ENTER after expression.")
+			this.advance()
 		}
 		
     return new Stmt.Expression(expr);                  
@@ -44,10 +45,10 @@ export default class Parser {
 
     let initializer:Expr = this.expression();                                                 
 
-    if (!this.check(ENTER)){
-			if (!this.check(EOF)) console.error("Expect ENTER after expression.")
+    if (!this.check(ENTER) && this.peek().type != EOF){
+			console.error("Expect ENTER or EOF after expression.")
 		}else{
-			this.consume(ENTER, "Expect ENTER after expression.")
+			this.advance()
 		}
     return new Stmt.Var(name, initializer);
 	}
