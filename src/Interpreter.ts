@@ -14,7 +14,7 @@ export default class Interpreter {
 		this.statements = statements
 	}
 	interpret(){
-		return this.statements.map(statement=>this.interpretOne(statement))
+		this.statements.forEach(statement=>debug(this.interpretOne(statement)))
 	}
 	interpretOne(stmt:Stmt){
 		//debug("typeof expr: ",typeof expr)
