@@ -116,7 +116,6 @@ export default class Parser {
 	}
   
   unary():Expr {   
-		//let expr = this.primary()
     debug(this.current,"unary")
     
     if (this.match(MINUS)) {           
@@ -124,19 +123,7 @@ export default class Parser {
       let right:Expr = this.unary();                  
       return new Expr.Unary(operator, right);
     }
-		/*if (this.check(CIRCUMFLEX)) {
-			this.current--
-			let left = this.primary()
-			console.log("exponent",this.current,left)
-			this.advance()
-      let operator:Token = this.previous();                  
-      let right:Expr = this.unary();
-      return new Expr.Binary(left, operator, right);
-    }*/
-		//console.log(this.current++,this.peek())
-		//this.current++
-		//if (this.tokens[this.current+1].type == CIRCUMFLEX) {
-    //return expr; 
+		
 		return this.primary()
   }               
   
@@ -151,15 +138,6 @@ export default class Parser {
       return new Expr.Literal(this.previous());  
     }
 		
-		//let expr = this.unary()
-		/*if (this.match(CIRCUMFLEX)) {
-			let left = this.expression();
-      let operator:Token = this.previous();                  
-      let right:Expr = this.unary();
-      return new Expr.Binary(left, operator, right);
-    }*/
-		
-
     if (this.match(LEFT_PAREN)) {                               
       let expr:Expr = this.expression();   
       this.consume(RIGHT_PAREN, "Expect ')' after expression.");
@@ -170,11 +148,8 @@ export default class Parser {
   
   // END RULES
   
-  //
-  // WHAT IS THE TYPE OF types
-  //      _________________|
-  //      |
-  //      v
+ 
+	
   match(...types:TokenType[]):boolean {
     for (let i in types) {          
       let type:TokenType = types[i]
@@ -195,18 +170,7 @@ export default class Parser {
     if (!this.isAtEnd()) this.current++;
     return this.previous();        
   }          
-  //
-  //
-  //
-  //
-  //
-  // NEED TO FIX THIS; SCANNER DOESN'T HAVE EOF RIGHT NOW
-  //
-  //                            |
-  //                            |
-  //                            |
-  //                            |
-  //                            v
+  
   isAtEnd():boolean {      
     return this.peek().type == EOF;     
     //if (this.current == this.tokens.length) return true;     
@@ -214,13 +178,7 @@ export default class Parser {
   }
 
   peek():Token {      
-    //
-    //
-    // IS THIS RIGHT? SHOULD IT BE current + 1 ?
-    //
-    //              |
-    //              |
-    //              v
+    
     return this.tokens[this.current];    
   }                                
 
