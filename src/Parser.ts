@@ -4,7 +4,7 @@ import Expr from "./Expr.ts"
 import Stmt from "./Stmt.ts"
 import debug from "./debug.ts"
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,RETURN,EOF} = TokenType
+let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,ENTER,EOF} = TokenType
 
 export default class Parser {                                         
   tokens:Token[];                    
@@ -25,10 +25,10 @@ export default class Parser {
 	
 	expressionStatement():Stmt {                 
     let expr = this.expression();
-		if (this.peek().type !== RETURN){
-			if (this.peek().type !== EOF) console.error("Expect RETURN after expression.")
+		if (this.peek().type !== ENTER){
+			if (this.peek().type !== EOF) console.error("Expect ENTER after expression.")
 		}else{
-			this.consume(RETURN, "Expect RETURN after expression.")
+			this.consume(ENTER, "Expect ENTER after expression.")
 		}
 		
     return new Stmt.Expression(expr);                  
