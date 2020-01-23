@@ -102,11 +102,7 @@ export default class Parser {
     return expr;                                    
   }
 	
-	//
-	//
-	//WRONG ORDER
-	//
-	//
+	
 	exponent():Expr{
 		let expr = this.unary()
 		debug(this.current,"exponent",expr)
