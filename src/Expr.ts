@@ -34,10 +34,18 @@ export class Unary {
   }
 }
 
+export class Variable{
+	name:Token
+	constructor(name:Token) {
+		this.name = name;
+	}
+}
+
 class Expr {
   static Binary = Binary;
   static Grouping = Grouping;
   static Literal = Literal;
   static Unary = Unary;
+	static Variable = Variable;
 }
 export default Expr

@@ -154,7 +154,7 @@ export default class Parser {
     
     if (this.match(VARIABLE)) {
       debug(this.current,"primary VARIABLE")
-      return new Stmt.Var(this.previous());  
+      return new Expr.Variable(this.previous());  
     }
 		
     if (this.match(LEFT_PAREN)) {                               
