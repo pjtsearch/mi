@@ -8,7 +8,8 @@ import Environment from "./Environment.ts"
 let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN} = TokenType
 
 export default class Interpreter {
-	environment:Environment = new Environment(); 
+	globals:Environment = new Environment(); 
+	environment:Environment = this.globals
 	statements:Stmt[]
 	constructor(statements:Stmt[]){
 		this.statements = statements
@@ -16,7 +17,7 @@ export default class Interpreter {
 	interpret(){
 		this.statements.forEach(statement=>debug(this.interpretOne(statement)))
 	}
-	interpretOne(stmt:Stmt){
+	interpretOne(stmt:Stmt,environment:Environment=this.globals){
 		//debug("typeof expr: ",typeof expr)
 		if (stmt instanceof Stmt.Expression){
 			return this.interpretOne(stmt.expression)
