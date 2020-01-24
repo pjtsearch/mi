@@ -41,11 +41,24 @@ export class Variable{
 	}
 }
 
+export class Call {       
+	callee:Expr;
+	paren:Token;
+	args:Expr[];
+	constructor(callee:Expr, paren:Token,args:Expr[]) {
+		this.callee = callee;         
+		//location of parenthesis for errors
+		this.paren = paren;                                 
+		this.args = args;                         
+	}                                              
+}      
+
 class Expr {
   static Binary = Binary;
   static Grouping = Grouping;
   static Literal = Literal;
   static Unary = Unary;
 	static Variable = Variable;
+	static Call = Call;
 }
 export default Expr

@@ -1,7 +1,7 @@
 import Token from "./Token.ts"
 import TokenType,{keywords} from "./TokenType.ts"
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,ENTER,EOF} = TokenType
+let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,COMMA,ENTER,EOF} = TokenType
 
 export default class Scanner {   
   source:string;
@@ -34,6 +34,7 @@ export default class Scanner {
       case '/': this.addToken(SLASH); break;         
       case '+': this.addToken(PLUS); break;           
       case '-': this.addToken(MINUS); break; 
+			case ',': this.addToken(COMMA); break;
       case '=': this.addToken(EQUAL); break;    
       case '<': this.addToken(this.match('=') ? LESS_EQUAL : LESS); break;      
       case '>': this.addToken(this.match('=') ? GREATER_EQUAL : GREATER); break;

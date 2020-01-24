@@ -13,7 +13,7 @@
   //Keywords
   SIN,COS,TAN,
 	 
-	ENTER,EOF
+	COMMA,ENTER,EOF
 }
 export default TokenType
 

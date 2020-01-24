@@ -17,7 +17,7 @@ export class Function {
 		this.params = params;
 		this.body = body;
 	}
-}
+}     
 
 export class Var {
 	name:Token;

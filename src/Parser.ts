@@ -4,7 +4,7 @@ import Expr from "./Expr.ts"
 import Stmt from "./Stmt.ts"
 import debug from "./debug.ts"
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,ENTER,EOF} = TokenType
+let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,COMMA,ENTER,EOF} = TokenType
 
 export default class Parser {                                         
   tokens:Token[];                    
@@ -143,8 +143,44 @@ export default class Parser {
       return new Expr.Unary(operator, right);
     }
 		
-		return this.primary()
+		return this.call()
   }               
+	
+	call():Expr {   
+		// Only a call if is a variable, so that if its a number it will be multiplied
+		let isCall;
+		if (this.check(VARIABLE)) {
+			isCall = true
+		}
+    let expr:Expr = this.primary();
+		
+		if (isCall){
+			while (true) {              
+				if (this.match(LEFT_PAREN)) {  
+					expr = this.finishCall(expr);
+				} else {                  
+					break;                  
+				}                         
+			}    
+		}
+
+    return expr;                
+  }               
+	
+	finishCall(callee:Expr):Expr {                              
+    let args:Expr[] = [];                         
+    if (!this.check(RIGHT_PAREN)) {     
+			args.push(this.expression());
+      while (this.match(COMMA)) {                                                            
+        args.push(this.expression());                                  
+      }                                         
+    }
+
+    let paren:Token = this.consume(RIGHT_PAREN, "Expect ')' after arguments.");
+
+    return new Expr.Call(callee, paren, args);                   
+  }                      
+
   
   primary():Expr {
     if (this.match(NUMBER)) {  
