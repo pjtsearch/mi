@@ -39,7 +39,7 @@ export default class Interpreter {
 			// @ts-ignore
 			const funct = <Stmt.Function> environment.get(stmt.callee.name)
 			let functEnvironmet = new Environment(environment)
-			stmt.args.forEach((arg,i)=>functEnvironmet.define(funct.params[i].lexeme,this.interpretOne(arg)))
+			stmt.args.forEach((arg,i)=>functEnvironmet.define(funct.params[i].lexeme,this.interpretOne(arg,environment)))
 			return this.interpretOne(funct.body,functEnvironmet)
 		}else if (stmt instanceof Expr.Variable){
 			return environment.get(stmt.name);
