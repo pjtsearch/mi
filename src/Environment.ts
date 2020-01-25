@@ -1,4 +1,5 @@
 import Token from "./Token.ts"
+import {RefError} from "./Error.ts"
 export default class Environment {                                          
 	values:Map<string, object> = new Map<string, object>();
 	enclosing:Environment
@@ -14,7 +15,9 @@ export default class Environment {
     }
 		
 		if (this.enclosing != null) return this.enclosing.get(name);
-
-    throw new Error(name + " Undefined variable '" + name.lexeme + "'.");        
+		throw new RefError(name)
+		//referenceError(name,-1,true)
+    //throw new Error(name + " Undefined variable '" + name.lexeme + "'."); 
+		
   }       
 }                                                            
