@@ -143,21 +143,21 @@ export default class Parser {
       return new Expr.Unary(operator, right);
     }
 		
-		return this.call()
+		return this.functionOrCall()
   }               
 	
-	call():Expr {   
+	functionOrCall():Expr|Stmt {   
 		// Only a call if is a variable, so that if its a number it will be multiplied
-		let isCall;
+		let isCalleeVar;
 		if (this.check(VARIABLE)) {
-			isCall = true
+			isCalleeVar = true
 		}
     let expr:Expr = this.primary();
 		
-		if (isCall){
+		if (isCalleeVar){
 			while (true) {              
 				if (this.match(LEFT_PAREN)) {  
-					expr = this.finishCall(expr);
+					expr = this.finishFunctionOrCall(expr);
 				} else {                  
 					break;                  
 				}                         
@@ -165,9 +165,16 @@ export default class Parser {
 		}
 
     return expr;                
-  }               
+  }           
 	
-	finishCall(callee:Expr):Expr {                              
+	//
+	//
+	// 
+	//FIX: make more robust, with error handling
+	//
+	//
+	//
+	finishFunctionOrCall(callee:Expr):Expr|Stmt {                              
     let args:Expr[] = [];                         
     if (!this.check(RIGHT_PAREN)) {     
 			args.push(this.expression());
@@ -177,10 +184,15 @@ export default class Parser {
     }
 
     let paren:Token = this.consume(RIGHT_PAREN, "Expect ')' after arguments.");
-
-    return new Expr.Call(callee, paren, args);                   
-  }                      
-
+		
+		if (this.match(EQUAL)) {
+			let body = this.expression()
+			// @ts-ignore
+			return new Stmt.Function(callee.name,args.map(arg=>arg.name),body)
+		}else{
+			return new Expr.Call(callee, paren, args);     
+		}           
+  }
   
   primary():Expr {
     if (this.match(NUMBER)) {  
