@@ -4,6 +4,8 @@ import Expr from "./Expr.ts"
 import Stmt from "./Stmt.ts"
 import debug from "./debug.ts"
 import Environment from "./Environment.ts"
+import Callable from "./Callable.ts"
+import Funct from "./Funct.ts"
 
 let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN} = TokenType
 
@@ -30,17 +32,23 @@ export default class Interpreter {
 			return null
 		//FIX: Make a class or something
 		}else if (stmt instanceof Stmt.Function){
-			environment.define(stmt.name.lexeme, stmt)
+			//environment.define(stmt.name.lexeme, stmt)
+			const funct = new Funct(stmt)
+			environment.define(stmt.name.lexeme, funct);  
 			return null
 		//FIX: make more robust
 		}else if (stmt instanceof Expr.Call){
 			// @ts-ignore
 			//console.log(environment.get("f"))
+			const callee = this.interpretOne(stmt.callee,environment)
+			let args:Object[] = stmt.args.map(arg=>this.interpretOne(arg,environment))
+			const funct:Callable = <Callable> callee;         
+    	return funct.call(this, args, environment);
 			// @ts-ignore
-			const funct = <Stmt.Function> environment.get(stmt.callee.name)
-			let functEnvironmet = new Environment(environment)
-			stmt.args.forEach((arg,i)=>functEnvironmet.define(funct.params[i].lexeme,this.interpretOne(arg,environment)))
-			return this.interpretOne(funct.body,functEnvironmet)
+			//const funct = <Stmt.Function> environment.get(stmt.callee.name)
+			//let functEnvironmet = new Environment(environment)
+			//stmt.args.forEach((arg,i)=>functEnvironmet.define(funct.params[i].lexeme,this.interpretOne(arg,environment)))
+			//return this.interpretOne(funct.body,functEnvironmet)
 		}else if (stmt instanceof Expr.Variable){
 			return environment.get(stmt.name);
 		}else if (stmt instanceof Expr.Binary){
