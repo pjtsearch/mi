@@ -7,7 +7,7 @@ import OptionsType from "./OptionsType.ts"
 import {ParseError} from "./Error.ts"
 
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,COMMA,ENTER,EOF} = TokenType
+let {NUMBER,VARIABLE,STRING,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,IMPORT,FROM,COMMA,ENTER,EOF} = TokenType
 
 export default class Parser {                                         
   tokens:Token[];                    
@@ -29,6 +29,8 @@ export default class Parser {
 	statement():Stmt {
 		if (this.check(VARIABLE) && this.checkNext(EQUAL)){
 			return this.varStatement()
+		}else if (this.match(IMPORT)) {
+			return this.importStatement();
 		}else{
     	return this.expressionStatement();      
 		}
@@ -58,6 +60,18 @@ export default class Parser {
 			this.advance()
 		}
     return new Stmt.Var(name, initializer);
+	}
+	importStatement():Stmt {
+		let name:Token = this.consume(VARIABLE, "Expect variable name.");
+		this.consume(FROM,"Expect 'from' in import.")
+		let source:Token = this.consume(STRING, "Expect import source.");
+		
+    if (!this.check(ENTER) && this.peek().type != EOF){
+			this.error("Expect ENTER or EOF after expression.")
+		}else{
+			this.advance()
+		}
+    return new Stmt.Import(name,source);  
 	}
   /*
   // DOES EQUALITY APPLY, SHOULD ONLY USE ASSIGNMENT?
@@ -214,6 +228,11 @@ export default class Parser {
       this.debug(this.current,"primary VARIABLE")
       return new Expr.Variable(this.previous());  
     }
+		
+		if (this.match(STRING)) {   
+			this.debug(this.current,"primary STRING")
+      return new Expr.Literal(this.previous());         
+    }     
 		
     if (this.match(LEFT_PAREN)) {                               
       let expr:Expr = this.expression();   

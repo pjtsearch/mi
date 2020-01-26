@@ -9,7 +9,7 @@ import Callable from "./Callable.ts"
 import Funct from "./Funct.ts"
 import {InterpreterError} from "./Error.ts"
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN} = TokenType
+let {NUMBER,VARIABLE,STRING,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,IMPORT} = TokenType
 
 export default class Interpreter {
 	globals:Environment = new Environment(); 
@@ -35,6 +35,10 @@ export default class Interpreter {
 				value = this.interpretOne(stmt.initializer,environment);  
 			}
 			environment.define(stmt.name.lexeme, value)
+			return null
+		}else if (stmt instanceof Stmt.Import){
+			let source = stmt.source.literal;  
+			environment.define(stmt.name.lexeme, source)
 			return null
 		}else if (stmt instanceof Stmt.Function){
 			//environment.define(stmt.name.lexeme, stmt)

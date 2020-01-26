@@ -28,8 +28,18 @@ export class Var {
 	}
 }
 
+export class Import {
+	name:Token;
+	source:Token;
+	constructor(name:Token, source:Token) {
+		this.name = name;
+		this.source = source;
+	}
+}
+
 export default class Stmt{
 	static Expression = Expression
 	static Function = Function
 	static Var = Var
+	static Import = Import
 }

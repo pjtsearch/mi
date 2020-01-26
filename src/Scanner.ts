@@ -3,7 +3,7 @@ import TokenType,{keywords} from "./TokenType.ts"
 import OptionsType from "./OptionsType.ts"
 import {ScanError} from "./Error.ts"
 
-let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,COMMA,ENTER,EOF} = TokenType
+let {NUMBER,VARIABLE,STRING,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,IMPORT,COMMA,ENTER,EOF} = TokenType
 
 export default class Scanner {   
   source:string;
@@ -43,6 +43,7 @@ export default class Scanner {
       case '=': this.addToken(EQUAL); break;    
       case '<': this.addToken(this.match('=') ? LESS_EQUAL : LESS); break;      
       case '>': this.addToken(this.match('=') ? GREATER_EQUAL : GREATER); break;
+			case '"': this.string(); break;
 			case '\n':        
 				this.column = 1
         this.line++;    
@@ -129,8 +130,15 @@ export default class Scanner {
     this.addToken(NUMBER,Number(this.source.substring(this.start, this.current)));
   }      
   variable():void {
-		// DON'T JOIN SINGLE LETTERS
-    //while (this.isAlpha(this.peek())) this.advance();
+		// To check if it is keyword
+		let connected = ""
+		let i = this.start
+    while (this.isAlpha(this.source.charAt(i))) {
+			connected+=this.source.charAt(i)
+			i++
+		}
+		//advance it
+		if (Object.keys(keywords).includes(connected))	while (this.isAlpha(this.peek()))this.advance();
     
     let text:string = this.source.substring(this.start, this.current);
 
@@ -138,6 +146,25 @@ export default class Scanner {
     if (type == undefined) type = VARIABLE;           
     this.addToken(type);                      
   } 
+	string():void {                                   
+    while (this.peek() != '"' && !this.isAtEnd()) {                   
+      if (this.peek() == '\n') this.line++;                           
+      this.advance();                                            
+    }
+
+    // Unterminated string.                                 
+    if (this.isAtEnd()) {              
+			throw new ScanError(`Unterminated string`,this.line,this.start+1,this.source);
+      return;                                               
+    }                                                       
+
+    // The closing ".                                       
+    this.advance();                                              
+
+    // Trim the surrounding quotes.                         
+    let value:string = this.source.substring(this.start + 1, this.current - 1);
+    this.addToken(STRING, value);                                
+  }                                                         
 	debug(...args){
 		if (this.options.dev) console.log(...args)
 	}
