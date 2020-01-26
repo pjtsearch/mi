@@ -8,6 +8,7 @@ import Environment from "./Environment.ts"
 import Callable from "./Callable.ts"
 import Funct from "./Funct.ts"
 import {InterpreterError} from "./Error.ts"
+import standardLib from "./standard-lib/index.ts"
 
 let {NUMBER,VARIABLE,STRING,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,IMPORT} = TokenType
 
@@ -37,8 +38,11 @@ export default class Interpreter {
 			environment.define(stmt.name.lexeme, value)
 			return null
 		}else if (stmt instanceof Stmt.Import){
-			let source = stmt.source.literal;  
-			environment.define(stmt.name.lexeme, source)
+			let source:string = stmt.source.literal as string;  
+			if (!standardLib.find(module=>module.name===source)) this.error(`Module not found: ${source} -> ${stmt.name.lexeme}`)
+			let value = standardLib.find(module=>module.name===source).exports[stmt.name.lexeme]
+			if (!value) this.error(`Module not found: ${source} -> ${stmt.name.lexeme}`)
+			environment.define(stmt.name.lexeme, value)
 			return null
 		}else if (stmt instanceof Stmt.Function){
 			//environment.define(stmt.name.lexeme, stmt)

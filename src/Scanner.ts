@@ -2,6 +2,7 @@ import Token from "./Token.ts"
 import TokenType,{keywords} from "./TokenType.ts"
 import OptionsType from "./OptionsType.ts"
 import {ScanError} from "./Error.ts"
+import standardLib from "./standard-lib/index.ts"
 
 let {NUMBER,VARIABLE,STRING,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,IMPORT,COMMA,ENTER,EOF} = TokenType
 
@@ -137,8 +138,11 @@ export default class Scanner {
 			connected+=this.source.charAt(i)
 			i++
 		}
+		let standardLibExports = standardLib.map(mod=>Object.keys(mod.exports)).flat()
 		//advance it
-		if (Object.keys(keywords).includes(connected))	while (this.isAlpha(this.peek()))this.advance();
+		if (Object.keys(keywords).includes(connected)||standardLibExports.includes(connected)){	
+			while (this.isAlpha(this.peek()))this.advance();
+		}
     
     let text:string = this.source.substring(this.start, this.current);
 
