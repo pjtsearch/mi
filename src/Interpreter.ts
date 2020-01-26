@@ -32,13 +32,11 @@ export default class Interpreter {
 			}
 			environment.define(stmt.name.lexeme, value)
 			return null
-		//FIX: Make a class or something
 		}else if (stmt instanceof Stmt.Function){
 			//environment.define(stmt.name.lexeme, stmt)
 			const funct = new Funct(stmt)
 			environment.define(stmt.name.lexeme, funct);  
 			return null
-		//FIX: make more robust
 		}else if (stmt instanceof Expr.Call){
 			// @ts-ignore
 			//console.log(environment.get("f"))
@@ -75,4 +73,8 @@ export default class Interpreter {
 			}
 		}
 	}
+	error(message:string) {
+		//console.log(this.peek())
+		throw new InterpreterError(message,this.peek().line,this.peek().column,this.source)                          
+  }   
 }

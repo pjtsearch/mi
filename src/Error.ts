@@ -21,6 +21,12 @@ export class ParseError extends BaseError {
 	}
 }
 
+export class InterpreterError extends BaseError {
+	constructor(message:string,line?:number,column?:number,source?:string) {
+		super("InterpreterError",message,line,column,source);
+	}
+}
+
 export class ScanError extends BaseError {
 	constructor(message:string,line?:number,column?:number,source?:string) {
 		super("ScanError",message,line,column,source);
