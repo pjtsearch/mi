@@ -1,5 +1,6 @@
 import Token from "./Token.ts"
 import TokenType,{keywords} from "./TokenType.ts"
+import {ScanError} from "./Error.ts"
 
 let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,COMMA,ENTER,EOF} = TokenType
 
@@ -55,7 +56,7 @@ export default class Scanner {
         } else if (this.isAlpha(char)) {                   
           this.variable();                            
         } else {    
-          console.error(`Unexpected character: "${char}"`);
+          throw new ScanError(`Unexpected character: "${char}"`,this.line,this.start+1,this.source);
         }
       break;
     }                                            
