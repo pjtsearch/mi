@@ -4,8 +4,8 @@ export class BaseError {
 	constructor(type:string,message:string,line?:number,column?:number,source?:string){
 		console.error(`[${type}] ${message} - ${line!==undefined?`${line}`:''}${column!==undefined?`:${column}`:''}
 ${source ? source.split("\n")[line-1]:""}
-${new Array(column).join(" ")}^
-${new Array(column-1).join(" ")}Here`)
+${source ? new Array(column).join(" ")+"^":""}
+${source ? new Array(column-1).join(" ")+"Here":""}`)
 	}
 }
 

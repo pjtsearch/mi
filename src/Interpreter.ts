@@ -2,10 +2,12 @@ import Token from "./Token.ts"
 import TokenType,{keywords} from "./TokenType.ts"
 import Expr from "./Expr.ts"
 import Stmt from "./Stmt.ts"
-import debug from "./debug.ts"
+//import debug from "./debug.ts"
+import OptionsType from "./OptionsType.ts"
 import Environment from "./Environment.ts"
 import Callable from "./Callable.ts"
 import Funct from "./Funct.ts"
+import {InterpreterError} from "./Error.ts"
 
 let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN} = TokenType
 
@@ -14,12 +16,14 @@ export default class Interpreter {
 	environment:Environment = this.globals
 	statements:Stmt[]
 	source:string
-	constructor(statements:Stmt[],source:string){
+	options:OptionsType
+	constructor(statements:Stmt[],source:string,options:OptionsType){
 		this.statements = statements
 		this.source = source
+		this.options = options
 	}
 	interpret(){
-		this.statements.forEach(statement=>debug(this.interpretOne(statement)))
+		this.statements.forEach(statement=>this.debug(this.interpretOne(statement)))
 	}
 	interpretOne(stmt:Stmt,environment:Environment=this.globals){
 		//debug("typeof expr: ",typeof expr)
@@ -75,6 +79,9 @@ export default class Interpreter {
 	}
 	error(message:string) {
 		//console.log(this.peek())
-		throw new InterpreterError(message,this.peek().line,this.peek().column,this.source)                          
+		throw new InterpreterError(message)                          
   }   
+	debug(...args){
+		if (this.options.dev) console.log(...args)
+	}
 }

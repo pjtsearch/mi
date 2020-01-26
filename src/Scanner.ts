@@ -1,5 +1,6 @@
 import Token from "./Token.ts"
 import TokenType,{keywords} from "./TokenType.ts"
+import OptionsType from "./OptionsType.ts"
 import {ScanError} from "./Error.ts"
 
 let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,COMMA,ENTER,EOF} = TokenType
@@ -11,8 +12,10 @@ export default class Scanner {
   current:number = 0;    
 	column:number = 1;
 	line:number = 1;  
-  constructor(source:string){                              
-    this.source = source;                       
+	options:OptionsType
+  constructor(source:string,options:OptionsType){                              
+    this.source = source;            
+		this.options = options;
   }
   scanTokens():Token[] {                        
     while (!this.isAtEnd()) {                            
@@ -134,5 +137,8 @@ export default class Scanner {
     let type:TokenType = keywords[text];           
     if (type == undefined) type = VARIABLE;           
     this.addToken(type);                      
-  }               
+  } 
+	debug(...args){
+		if (this.options.dev) console.log(...args)
+	}
 }               

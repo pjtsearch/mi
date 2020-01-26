@@ -2,7 +2,8 @@ import Token from "./Token.ts"
 import TokenType,{keywords} from "./TokenType.ts"
 import Expr from "./Expr.ts"
 import Stmt from "./Stmt.ts"
-import debug from "./debug.ts"
+//import debug from "./debug.ts"
+import OptionsType from "./OptionsType.ts"
 import {ParseError} from "./Error.ts"
 
 
@@ -12,10 +13,12 @@ export default class Parser {
   tokens:Token[];                    
   current:number = 0;  
 	source:string
+	options:OptionsType
 
-  constructor(tokens:Token[],source:string) {                         
+  constructor(tokens:Token[],source:string,options:OptionsType) {                         
     this.tokens = tokens;
 		this.source = source
+		this.options = options
   }                     
   // RULES
   expression():Expr {
@@ -86,7 +89,7 @@ export default class Parser {
   */
   addition():Expr {                         
     let expr:Expr = this.multiplication();
-    debug(this.current,"addition",expr)
+    this.debug(this.current,"addition",expr)
     
     while (this.match(MINUS, PLUS)) {
       let operator:Token = this.previous();                  
@@ -100,7 +103,7 @@ export default class Parser {
 
   multiplication():Expr {                   
     let expr:Expr = this.exponent();                            
-    debug(this.current,"multiplication",expr)
+    this.debug(this.current,"multiplication",expr)
 
     while (this.match(SLASH, STAR)) {                    
       let operator:Token = this.previous();                  
@@ -127,7 +130,7 @@ export default class Parser {
 	
 	exponent():Expr{
 		let expr = this.unary()
-		debug(this.current,"exponent",expr)
+		this.debug(this.current,"exponent",expr)
 		while (this.match(CIRCUMFLEX)) {
 			let left = expr
       let operator:Token = this.previous();                  
@@ -139,7 +142,7 @@ export default class Parser {
 	}
   
   unary():Expr {   
-    debug(this.current,"unary")
+    this.debug(this.current,"unary")
     
     if (this.match(MINUS)) {           
       let operator:Token = this.previous();           
@@ -203,19 +206,19 @@ export default class Parser {
   
   primary():Expr {
     if (this.match(NUMBER)) {  
-      debug(this.current,"primary NUMBER")
+      this.debug(this.current,"primary NUMBER")
       return new Expr.Literal(this.previous());         
     }                 
     
     if (this.match(VARIABLE)) {
-      debug(this.current,"primary VARIABLE")
+      this.debug(this.current,"primary VARIABLE")
       return new Expr.Variable(this.previous());  
     }
 		
     if (this.match(LEFT_PAREN)) {                               
       let expr:Expr = this.expression();   
       this.consume(RIGHT_PAREN, "Expect ')' after expression.");
-      debug(this.current,"primary LEFT_PAREN",expr)
+      this.debug(this.current,"primary LEFT_PAREN",expr)
       return new Expr.Grouping(expr);                      
     }         
   }               
@@ -290,5 +293,8 @@ export default class Parser {
     }
 
     return statements;
-  }                             
+  }    
+	debug(...args){
+		if (this.options.dev) console.log(...args)
+	}
 }                                                      
