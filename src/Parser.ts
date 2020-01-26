@@ -10,10 +10,12 @@ let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQU
 
 export default class Parser {                                         
   tokens:Token[];                    
-  current:number = 0;                             
+  current:number = 0;  
+	source:string
 
-  constructor(tokens:Token[]) {                         
-    this.tokens = tokens;                              
+  constructor(tokens:Token[],source:string) {                         
+    this.tokens = tokens;
+		this.source = source
   }                     
   // RULES
   expression():Expr {
@@ -33,7 +35,7 @@ export default class Parser {
     let expr = this.expression();
 		//need peek becuase otherwise returns false becuase EOF
 		if (!this.check(ENTER) && this.peek().type != EOF){
-			throw new ParseError("Expect ENTER or EOF after expression.",this.peek().line,this.current)
+			this.error("Expect ENTER or EOF after expression.")
 		}else{
 			this.advance()
 		}
@@ -48,7 +50,7 @@ export default class Parser {
     let initializer:Expr = this.expression();                                                 
 
     if (!this.check(ENTER) && this.peek().type != EOF){
-			throw new ParseError("Expect ENTER or EOF after expression.",this.peek().line,this.current)
+			this.error("Expect ENTER or EOF after expression.")
 		}else{
 			this.advance()
 		}
@@ -89,7 +91,7 @@ export default class Parser {
     while (this.match(MINUS, PLUS)) {
       let operator:Token = this.previous();                  
       let right:Expr = this.multiplication();
-			if (right === undefined) throw new ParseError("Expected expression after addition or subtraction.",this.peek().line,this.current)
+			if (right === undefined) this.error("Expected expression after addition or subtraction.")
       expr = new Expr.Binary(expr, operator, right);
     }                                               
 
@@ -103,7 +105,7 @@ export default class Parser {
     while (this.match(SLASH, STAR)) {                    
       let operator:Token = this.previous();                  
       let right:Expr = this.exponent();     
-			if (right === undefined) throw new ParseError("Expected expression after multiplication or division.",this.peek().line,this.current)
+			if (right === undefined) this.error("Expected expression after multiplication or division.")
       expr = new Expr.Binary(expr, operator, right);
     }                   
     
@@ -130,7 +132,7 @@ export default class Parser {
 			let left = expr
       let operator:Token = this.previous();                  
       let right:Expr = this.unary();
-			if (right === undefined) throw new ParseError("Expected expression after exponent.",this.peek().line,this.current)
+			if (right === undefined) this.error("Expected expression after exponent.")
       expr = new Expr.Binary(left, operator, right);
     }
 		return expr
@@ -142,7 +144,7 @@ export default class Parser {
     if (this.match(MINUS)) {           
       let operator:Token = this.previous();           
       let right:Expr = this.unary();       
-			if (right === undefined) throw new ParseError("Expected expression after unary minus.",this.peek().line,this.current)
+			if (right === undefined) this.error("Expected expression after unary minus.")
       return new Expr.Unary(operator, right);
     }
 		
@@ -189,9 +191,9 @@ export default class Parser {
     let paren:Token = this.consume(RIGHT_PAREN, "Expect ')' after arguments.");
 		
 		if (this.match(EQUAL)) {
-			if (!args.every(arg=>arg instanceof Expr.Variable)) throw new ParseError("Expected function declaration to have variables as parameters.",this.peek().line,this.current)
+			if (!args.every(arg=>arg instanceof Expr.Variable)) this.error("Expected function declaration to have variables as parameters.")
 			let body = this.expression()
-			if (body === undefined) throw new ParseError("Expected expression after function declaration.",this.peek().line,this.current)
+			if (body === undefined) this.error("Expected expression after function declaration.")
 			// @ts-ignore
 			return new Stmt.Function(callee.name,args.map(arg=>arg.name),body)
 		}else{
@@ -273,12 +275,12 @@ export default class Parser {
     if (this.check(type)) return this.advance();
 
     //throw new Error(/*this.peek(), */message);  
-		throw new ParseError(message,this.peek().line,this.current)
+		this.error(message)
   }   
   
-  error(token:Token, message:string) {
-    console.error(token, message);                           
-    return new Error();                             
+  error(message:string) {
+		//console.log(this.peek())
+		throw new ParseError(message,this.peek().line,this.peek().column,this.source)                          
   }   
   
   parse():Stmt[] {                

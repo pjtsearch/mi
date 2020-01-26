@@ -9,6 +9,7 @@ export default class Scanner {
   tokens:Token[] = [];    
   start:number = 0;                               
   current:number = 0;    
+	column:number = 1;
 	line:number = 1;  
   constructor(source:string){                              
     this.source = source;                       
@@ -19,7 +20,7 @@ export default class Scanner {
       this.start = this.current;                              
       this.scanToken();                                  
     }
-		this.tokens.push(new Token(EOF, "", null, this.line, this.start+1));    
+		this.tokens.push(new Token(EOF, "", null, this.line, this.column));    
     return this.tokens;                                  
   }    
   isAtEnd():boolean {         
@@ -39,7 +40,8 @@ export default class Scanner {
       case '=': this.addToken(EQUAL); break;    
       case '<': this.addToken(this.match('=') ? LESS_EQUAL : LESS); break;      
       case '>': this.addToken(this.match('=') ? GREATER_EQUAL : GREATER); break;
-			case '\n':                                   
+			case '\n':        
+				this.column = 1
         this.line++;    
 				this.addToken(ENTER)
 				break;   
@@ -61,7 +63,8 @@ export default class Scanner {
       break;
     }                                            
   }      
-  advance():string {                               
+  advance():string {   
+		if (this.source.charAt(this.current - 1)!== "\n")this.column++
     this.current++;                                           
     return this.source.charAt(this.current - 1);                   
   }
@@ -79,13 +82,14 @@ export default class Scanner {
 
   addToken(type:TokenType, literal?:number | string):void {
     let text:string = this.source.substring(this.start, this.current);      
-    this.tokens.push(new Token(type, text, literal, this.line, this.start+1));    
+    this.tokens.push(new Token(type, text, literal, this.line, this.column));    
   }               
   match(expected:string):boolean {                 
     if (this.isAtEnd()) return false;                         
     if (this.source.charAt(this.current) != expected) return false;
 
-    this.current++;                                           
+    this.current++;  
+		this.column++;
     return true;                                         
   }        
   peek():string {           

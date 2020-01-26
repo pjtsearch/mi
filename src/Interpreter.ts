@@ -13,8 +13,10 @@ export default class Interpreter {
 	globals:Environment = new Environment(); 
 	environment:Environment = this.globals
 	statements:Stmt[]
-	constructor(statements:Stmt[]){
+	source:string
+	constructor(statements:Stmt[],source:string){
 		this.statements = statements
+		this.source = source
 	}
 	interpret(){
 		this.statements.forEach(statement=>debug(this.interpretOne(statement)))

@@ -16,8 +16,8 @@ export class RefError extends BaseError {
 }
 
 export class ParseError extends BaseError {
-	constructor(message:string,line?:number,column?:number) {
-		super("ParseError",message,line,column);
+	constructor(message:string,line?:number,column?:number,source?:string) {
+		super("ParseError",message,line,column,source);
 	}
 }
 
