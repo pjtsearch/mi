@@ -3,6 +3,8 @@ import TokenType,{keywords} from "./TokenType.ts"
 import Expr from "./Expr.ts"
 import Stmt from "./Stmt.ts"
 import debug from "./debug.ts"
+import {ParseError} from "./Error.ts"
+
 
 let {NUMBER,VARIABLE,LEFT_PAREN,RIGHT_PAREN,CIRCUMFLEX,STAR,SLASH,PLUS,MINUS,EQUAL,GREATER, GREATER_EQUAL,LESS, LESS_EQUAL,SIN,COS,TAN,COMMA,ENTER,EOF} = TokenType
 
@@ -31,7 +33,7 @@ export default class Parser {
     let expr = this.expression();
 		//need peek becuase otherwise returns false becuase EOF
 		if (!this.check(ENTER) && this.peek().type != EOF){
-			console.error("Expect ENTER or EOF after expression.")
+			throw new ParseError("Expect ENTER or EOF after expression.",this.peek().line,this.current)
 		}else{
 			this.advance()
 		}
@@ -46,7 +48,7 @@ export default class Parser {
     let initializer:Expr = this.expression();                                                 
 
     if (!this.check(ENTER) && this.peek().type != EOF){
-			console.error("Expect ENTER or EOF after expression.")
+			throw new ParseError("Expect ENTER or EOF after expression.",this.peek().line,this.current)
 		}else{
 			this.advance()
 		}
@@ -87,6 +89,7 @@ export default class Parser {
     while (this.match(MINUS, PLUS)) {
       let operator:Token = this.previous();                  
       let right:Expr = this.multiplication();
+			if (right === undefined) throw new ParseError("Expected expression after addition or subtraction.",this.peek().line,this.current)
       expr = new Expr.Binary(expr, operator, right);
     }                                               
 
@@ -99,21 +102,19 @@ export default class Parser {
 
     while (this.match(SLASH, STAR)) {                    
       let operator:Token = this.previous();                  
-      let right:Expr = this.exponent();                         
+      let right:Expr = this.exponent();     
+			if (right === undefined) throw new ParseError("Expected expression after multiplication or division.",this.peek().line,this.current)
       expr = new Expr.Binary(expr, operator, right);
     }                   
     
-    while (this.match(VARIABLE)) {
-      let operator:Token = new Token(STAR, "*", undefined,this.peek().line);  
-      //reverse to get variable, becuase match advances
-      this.current--
+    while (this.check(VARIABLE)) {
+      let operator:Token = new Token(STAR, "*", undefined,this.peek().line,this.current);  
       let right:Expr = this.exponent();                         
       expr = new Expr.Binary(expr, operator, right);
     }
     
-    while (this.match(LEFT_PAREN)) {
-      let operator:Token = new Token(STAR, "*", undefined,this.peek().line);
-      this.current--
+    while (this.check(LEFT_PAREN)) {
+      let operator:Token = new Token(STAR, "*", undefined,this.peek().line,this.current);
       let right:Expr = this.exponent();   
       expr = new Expr.Binary(expr, operator, right);
     }
@@ -129,6 +130,7 @@ export default class Parser {
 			let left = expr
       let operator:Token = this.previous();                  
       let right:Expr = this.unary();
+			if (right === undefined) throw new ParseError("Expected expression after exponent.",this.peek().line,this.current)
       expr = new Expr.Binary(left, operator, right);
     }
 		return expr
@@ -139,7 +141,8 @@ export default class Parser {
     
     if (this.match(MINUS)) {           
       let operator:Token = this.previous();           
-      let right:Expr = this.unary();                  
+      let right:Expr = this.unary();       
+			if (right === undefined) throw new ParseError("Expected expression after unary minus.",this.peek().line,this.current)
       return new Expr.Unary(operator, right);
     }
 		
@@ -186,7 +189,9 @@ export default class Parser {
     let paren:Token = this.consume(RIGHT_PAREN, "Expect ')' after arguments.");
 		
 		if (this.match(EQUAL)) {
+			if (!args.every(arg=>arg instanceof Expr.Variable)) throw new ParseError("Expected function declaration to have variables as parameters.",this.peek().line,this.current)
 			let body = this.expression()
+			if (body === undefined) throw new ParseError("Expected expression after function declaration.",this.peek().line,this.current)
 			// @ts-ignore
 			return new Stmt.Function(callee.name,args.map(arg=>arg.name),body)
 		}else{
@@ -267,7 +272,8 @@ export default class Parser {
   consume(type:TokenType, message:string):Token {
     if (this.check(type)) return this.advance();
 
-    throw new Error(/*this.peek(), */message);                        
+    //throw new Error(/*this.peek(), */message);  
+		throw new ParseError(message,this.peek().line,this.current)
   }   
   
   error(token:Token, message:string) {

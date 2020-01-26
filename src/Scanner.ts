@@ -18,7 +18,7 @@ export default class Scanner {
       this.start = this.current;                              
       this.scanToken();                                  
     }
-		this.tokens.push(new Token(EOF, "", null, this.line));    
+		this.tokens.push(new Token(EOF, "", null, this.line, this.start+1));    
     return this.tokens;                                  
   }    
   isAtEnd():boolean {         
@@ -78,7 +78,7 @@ export default class Scanner {
 
   addToken(type:TokenType, literal?:number | string):void {
     let text:string = this.source.substring(this.start, this.current);      
-    this.tokens.push(new Token(type, text, literal, this.line));    
+    this.tokens.push(new Token(type, text, literal, this.line, this.start+1));    
   }               
   match(expected:string):boolean {                 
     if (this.isAtEnd()) return false;                         
