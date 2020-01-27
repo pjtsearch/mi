@@ -1,10 +1,11 @@
-import MI from "./src/index.ts"
+#!/usr/bin/deno
+import MI from "../src/index.ts"
 import { input } from "https://raw.githubusercontent.com/johnsonjo4531/read_lines/master/input.ts";
-import Scanner from "./src/Scanner.ts"
-import Parser from "./src/Parser.ts"
-import Interpreter from "./src/Interpreter.ts"
-import Stmt from "./src/Stmt.ts"
-import Token from "./src/Token.ts"
+import Scanner from "../src/Scanner.ts"
+import Parser from "../src/Parser.ts"
+import Interpreter from "../src/Interpreter.ts"
+import Stmt from "../src/Stmt.ts"
+import Token from "../src/Token.ts"
 
 if (Deno.args[0] === "ast"){
 	let mi = new MI({dev:false})
