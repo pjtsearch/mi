@@ -27,11 +27,15 @@ if (Deno.args[0] === "ast"){
 		const interpreter:Interpreter = new Interpreter([],"",options)
 		while (true){
 			const command:string = await input("> ") as string;
-			const scanner:Scanner = new Scanner(command,options)
-			const tokens:Token[] = scanner.scanTokens()
-			const parser:Parser = new Parser(tokens,command,options)
-			const ast:Stmt[] = parser.parse()
-			console.log(interpreter.interpretOne(ast[0]))
+			try{
+				const scanner:Scanner = new Scanner(command,options)
+				const tokens:Token[] = scanner.scanTokens()
+				const parser:Parser = new Parser(tokens,command,options)
+				const ast:Stmt[] = parser.parse()
+				console.log(interpreter.interpretOne(ast[0]))
+			}catch(err){
+				console.error(err)
+			}
 		}
 	})();
 }
