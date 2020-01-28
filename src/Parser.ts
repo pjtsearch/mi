@@ -62,7 +62,13 @@ export default class Parser {
     return new Stmt.Var(name, initializer);
 	}
 	importStatement():Stmt {
-		let name:Token = this.consume(VARIABLE, "Expect variable name.");
+		let imports = []
+		if (!this.check(FROM)) {     
+			imports.push(this.consume(VARIABLE, "Expect variable name."));
+      while (this.match(COMMA)) {                                                            
+        imports.push(this.consume(VARIABLE, "Expect variable name."));                                  
+      }                                         
+    }
 		this.consume(FROM,"Expect 'from' in import.")
 		let source:Token = this.consume(STRING, "Expect import source.");
 		
@@ -71,7 +77,7 @@ export default class Parser {
 		}else{
 			this.advance()
 		}
-    return new Stmt.Import(name,source);  
+    return new Stmt.Import(imports,source);  
 	}
   /*
   // DOES EQUALITY APPLY, SHOULD ONLY USE ASSIGNMENT?

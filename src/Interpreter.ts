@@ -39,10 +39,13 @@ export default class Interpreter {
 			return null
 		}else if (stmt instanceof Stmt.Import){
 			let source:string = stmt.source.literal as string;  
-			if (!standardLib.find(module=>module.name===source)) this.error(`Module not found: ${source} -> ${stmt.name.lexeme}`)
-			let value = standardLib.find(module=>module.name===source).exports[stmt.name.lexeme]
-			if (!value) this.error(`Module not found: ${source} -> ${stmt.name.lexeme}`)
-			environment.define(stmt.name.lexeme, value)
+			let mod = standardLib.find(module=>module.name===source)
+			if (!mod) this.error(`Module not found: ${source}`)
+			stmt.imports.forEach(imp=>{
+				let value = mod.exports[imp.lexeme]
+				if (!value) this.error(`Module not found: ${source} -> ${imp.lexeme}`)
+				environment.define(imp.lexeme, value)
+			})
 			return null
 		}else if (stmt instanceof Stmt.Function){
 			//environment.define(stmt.name.lexeme, stmt)

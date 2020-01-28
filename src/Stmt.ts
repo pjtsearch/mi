@@ -29,10 +29,10 @@ export class Var {
 }
 
 export class Import {
-	name:Token;
+	imports:Token[];
 	source:Token;
-	constructor(name:Token, source:Token) {
-		this.name = name;
+	constructor(imports:Token[], source:Token) {
+		this.imports = imports;
 		this.source = source;
 	}
 }
