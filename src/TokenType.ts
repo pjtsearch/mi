@@ -1,6 +1,6 @@
  enum TokenType {
   //Literals
-  NUMBER,VARIABLE,
+  NUMBER,VARIABLE,STRING,
   //Operations
   LEFT_PAREN,RIGHT_PAREN,
   CIRCUMFLEX,
@@ -9,11 +9,11 @@
   //Equality
   EQUAL,                             
   GREATER, GREATER_EQUAL,                          
-  LESS, LESS_EQUAL,   
-  //Keywords
-  SIN,COS,TAN,
-	 
-	RETURN,EOF
+  LESS, LESS_EQUAL,
+	//Keywords
+	IMPORT,FROM,
+	//Other
+	COMMA,ENTER,EOF
 }
 export default TokenType
 
@@ -34,5 +34,6 @@ export default TokenType
 ] = Object.values(TokenType).filter(value=>typeof value === "string")*/
 
 export let keywords = {
-  sin:TokenType.SIN,cos:TokenType.COS,tan:TokenType.TAN
+  import:TokenType.IMPORT,
+  from:TokenType.FROM,
 }

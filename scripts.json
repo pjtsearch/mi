@@ -1,5 +1,4 @@
 {
-	"dev":"deno ./src/index.ts",
 	"build":"deno bundle ./src/index.ts ./dist/index.js",
-	"start":"deno ./dist/index.js"
+	"start":"deno ./bin/cli.ts"
 }
