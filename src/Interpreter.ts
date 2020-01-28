@@ -24,7 +24,7 @@ export default class Interpreter {
 		this.options = options
 	}
 	interpret(){
-		this.statements.forEach(statement=>this.debug(this.interpretOne(statement)))
+		return this.statements.map(statement=>this.interpretOne(statement))
 	}
 	interpretOne(stmt:Stmt,environment:Environment=this.globals){
 		//debug("typeof expr: ",typeof expr)
