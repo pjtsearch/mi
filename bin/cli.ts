@@ -1,4 +1,4 @@
-#!/usr/bin/deno
+#!/usr/bin/deno --allow-read
 import MI from "../src/index.ts"
 import { input } from "https://raw.githubusercontent.com/johnsonjo4531/read_lines/master/input.ts";
 import Scanner from "../src/Scanner.ts"
@@ -39,4 +39,12 @@ if (Deno.args[0] === "ast"){
 			}
 		}
 	})();
+}
+
+if (Deno.args.includes("-v")||Deno.args.includes("--version")){
+	(async()=>{
+		const decoder = new TextDecoder('utf-8');
+		const {major,minor,patch} = JSON.parse(decoder.decode(await Deno.readFile('version.json')));
+		console.log(`v${major}.${minor}.${patch}`)
+	})()
 }
