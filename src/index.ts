@@ -43,4 +43,13 @@ export default class MI {
 		const interpreter:Interpreter = new Interpreter(ast,source,this.options)
     return interpreter.interpret()
 	}
+	interpretExpression(command:string){
+		const options = {dev:false}
+		const scanner:Scanner = new Scanner(command,options)
+		const tokens:Token[] = scanner.scanTokens()
+		const parser:Parser = new Parser(tokens,command,options)
+		const ast:Stmt[] = parser.parse()
+		const interpreter:Interpreter = new Interpreter([],"",options)
+		return interpreter.interpretOne(ast[0])
+	}
 }
