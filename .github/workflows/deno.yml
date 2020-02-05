@@ -37,7 +37,7 @@ jobs:
       uses: denolib/setup-deno@master
       with:
         deno-version: ${{ matrix.deno }}
-    - run: deno bundle ./src/index.ts ./dist/index.js
+    - run: deno bundle ../src/index.ts ../dist/index.js
     - name: Upload Artifact
       uses: actions/upload-artifact@v1
       with:
