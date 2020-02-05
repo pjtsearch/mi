@@ -39,8 +39,8 @@ jobs:
         deno-version: ${{ matrix.deno }}
     - run: deno bundle ./src/index.ts ./dist/index.js
       uses: actions/upload-artifact@v1
-        with:
-          name: dist
-          path: ./dist/index.js
+      with:
+        name: dist
+        path: ./dist/index.js
       env:
         CI: true
