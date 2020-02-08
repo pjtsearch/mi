@@ -544,9 +544,12 @@ define("Interpreter", ["require", "exports", "TokenType", "Expr", "Stmt", "Envir
         constructor(statements, source, options) {
             this.globals = new Environment_ts_2.default();
             this.environment = this.globals;
+            this.modules = index_ts_1.default;
             this.statements = statements;
             this.source = source;
             this.options = options;
+            const modules = options.modules ? options.modules : [];
+            this.modules = [...modules, ...index_ts_1.default];
         }
         interpret() {
             return this.statements.map(statement => this.interpretOne(statement));
@@ -566,7 +569,7 @@ define("Interpreter", ["require", "exports", "TokenType", "Expr", "Stmt", "Envir
             }
             else if (stmt instanceof Stmt_ts_1.default.Import) {
                 let source = stmt.source.literal;
-                let mod = index_ts_1.default.find(module => module.name === source);
+                let mod = this.modules.find(module => module.name === source);
                 if (!mod)
                     this.error(`Module not found: ${source}`);
                 stmt.imports.forEach(imp => {
@@ -731,8 +734,11 @@ define("Scanner", ["require", "exports", "Token", "TokenType", "Error", "standar
             this.current = 0;
             this.column = 1;
             this.line = 1;
+            this.modules = index_ts_2.default;
             this.source = source;
             this.options = options;
+            const modules = options.modules ? options.modules : [];
+            this.modules = [...modules, ...index_ts_2.default];
         }
         scanTokens() {
             while (!this.isAtEnd()) {
@@ -875,7 +881,7 @@ define("Scanner", ["require", "exports", "Token", "TokenType", "Error", "standar
                 connected += this.source.charAt(i);
                 i++;
             }
-            let standardLibExports = index_ts_2.default.map(mod => Object.keys(mod.exports)).flat();
+            let standardLibExports = this.modules.map(mod => Object.keys(mod.exports)).flat();
             //advance it
             if (Object.keys(TokenType_ts_2.keywords).includes(connected) || standardLibExports.includes(connected)) {
                 while (this.isAlpha(this.peek()))
