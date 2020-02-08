@@ -9,6 +9,7 @@
   "scripts": {
     "test": "deno ./test/index.ts",
     "build":"deno bundle ./src/index.ts ./dist/index.js",
+    "buildNode":"deno bundle ./src/index.ts ./dist/index.js && sed -i 's/instantiate(\"index\")/export default instantiate(\"index\").default/g' ./dist/index.js",
     "start":"deno --allow-read ./bin/cli.ts"
   },
   "repository": {

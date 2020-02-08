@@ -1259,4 +1259,4 @@ define("index", ["require", "exports", "Scanner", "Parser", "Interpreter"], func
     exports.default = MI;
 });
 
-instantiate("index");
+export default instantiate("index").default;
