@@ -1,0 +1,31 @@
+{
+  "name": "mi",
+  "version": "0.2.1",
+  "description": "Math interpreter made with TS",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "deno ./test/index.ts",
+    "build":"deno bundle ./src/index.ts ./dist/index.js",
+    "start":"deno --allow-read ./bin/cli.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjtsearch/ts-math-interpreter.git"
+  },
+  "keywords": [
+    "math",
+    "interpreter",
+    "mi",
+    "algebra",
+    "language"
+  ],
+  "author": "PJTSearch",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/pjtsearch/ts-math-interpreter/issues"
+  },
+  "homepage": "https://github.com/pjtsearch/ts-math-interpreter#readme"
+}
