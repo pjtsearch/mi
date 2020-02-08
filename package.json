@@ -9,8 +9,7 @@
   "scripts": {
     "test": "deno ./test/index.ts",
     "build":"deno bundle ./src/index.ts ./dist/index.js",
-    "start":"deno --allow-read ./bin/cli.ts",
-    "prepare": "npm run build"
+    "start":"deno --allow-read ./bin/cli.ts"
   },
   "repository": {
     "type": "git",
