@@ -1,3 +1,4 @@
 export default interface OptionsType {
-	dev:boolean
+	dev:boolean,
+	modules?:any[]
 }

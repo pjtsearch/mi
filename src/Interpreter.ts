@@ -18,10 +18,13 @@ export default class Interpreter {
 	statements:Stmt[]
 	source:string
 	options:OptionsType
+	modules:any[] = standardLib
 	constructor(statements:Stmt[],source:string,options:OptionsType){
 		this.statements = statements
 		this.source = source
 		this.options = options
+		const modules = options.modules ? options.modules : []
+		this.modules = [...modules,...standardLib]
 	}
 	interpret(){
 		return this.statements.map(statement=>this.interpretOne(statement))
@@ -39,7 +42,7 @@ export default class Interpreter {
 			return null
 		}else if (stmt instanceof Stmt.Import){
 			let source:string = stmt.source.literal as string;  
-			let mod = standardLib.find(module=>module.name===source)
+			let mod = this.modules.find(module=>module.name===source)
 			if (!mod) this.error(`Module not found: ${source}`)
 			stmt.imports.forEach(imp=>{
 				let value = mod.exports[imp.lexeme]

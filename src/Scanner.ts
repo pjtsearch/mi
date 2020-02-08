@@ -13,10 +13,13 @@ export default class Scanner {
   current:number = 0;    
 	column:number = 1;
 	line:number = 1;  
-	options:OptionsType
+  options:OptionsType
+  modules:any[] = standardLib
   constructor(source:string,options:OptionsType){                              
     this.source = source;            
-		this.options = options;
+    this.options = options;
+    const modules = options.modules ? options.modules : []
+		this.modules = [...modules,...standardLib]
   }
   scanTokens():Token[] {                        
     while (!this.isAtEnd()) {                            
@@ -138,7 +141,7 @@ export default class Scanner {
 			connected+=this.source.charAt(i)
 			i++
 		}
-		let standardLibExports = standardLib.map(mod=>Object.keys(mod.exports)).flat()
+		let standardLibExports = this.modules.map(mod=>Object.keys(mod.exports)).flat()
 		//advance it
 		if (Object.keys(keywords).includes(connected)||standardLibExports.includes(connected)){	
 			while (this.isAlpha(this.peek()))this.advance();
