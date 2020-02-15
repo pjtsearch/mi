@@ -1,7 +1,7 @@
-import Token from "./Token.ts";
-import TokenType, { keywords } from "./TokenType.ts";
-import { ScanError } from "./Error.ts";
-import standardLib from "./standard-lib/index.ts";
+import Token from "./Token";
+import TokenType, { keywords } from "./TokenType";
+import { ScanError } from "./Error";
+import standardLib from "./standard-lib/index";
 let { NUMBER, VARIABLE, STRING, LEFT_PAREN, RIGHT_PAREN, CIRCUMFLEX, STAR, SLASH, PLUS, MINUS, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, IMPORT, COMMA, ENTER, EOF } = TokenType;
 export default class Scanner {
     constructor(source, options) {

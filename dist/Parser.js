@@ -1,8 +1,8 @@
-import Token from "./Token.ts";
-import TokenType from "./TokenType.ts";
-import Expr from "./Expr.ts";
-import Stmt from "./Stmt.ts";
-import { ParseError } from "./Error.ts";
+import Token from "./Token";
+import TokenType from "./TokenType";
+import Expr from "./Expr";
+import Stmt from "./Stmt";
+import { ParseError } from "./Error";
 let { NUMBER, VARIABLE, STRING, LEFT_PAREN, RIGHT_PAREN, CIRCUMFLEX, STAR, SLASH, PLUS, MINUS, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, IMPORT, FROM, COMMA, ENTER, EOF } = TokenType;
 export default class Parser {
     constructor(tokens, source, options) {

@@ -1,4 +1,4 @@
-import { red, bold, blue, } from "./utils/color.ts";
+import { red, bold, blue, } from "./utils/color";
 export class BaseError {
     constructor(type, message, line, column, source) {
         //if (Deno){

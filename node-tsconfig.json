@@ -1,16 +1,14 @@
 {
   "compilerOptions": {
-    "module": "esm",
+    "module": "esnext",
     "target": "esnext",
     "baseUrl": ".",
     "paths": {
-      "http://*": ["../../../.deno/deps/http/*"],
-      "https://*": ["../../../.deno/deps/https/*"],
-      "*.ts": ["*"]
+      
     },
     "outDir":"./dist"
   },
   "include": [
-      "./src/**/*"
+      "./tmp/**/*"
   ]
 }

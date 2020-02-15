@@ -1,4 +1,4 @@
-import { RefError } from "./Error.ts";
+import { RefError } from "./Error";
 export default class Environment {
     constructor(enclosing = null) {
         this.values = new Map();

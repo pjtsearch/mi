@@ -1,6 +1,6 @@
-import Scanner from "./Scanner.ts";
-import Parser from "./Parser.ts";
-import Interpreter from "./Interpreter.ts";
+import Scanner from "./Scanner";
+import Parser from "./Parser";
+import Interpreter from "./Interpreter";
 /*
 if (Deno.args[0] === "ast"){
   var scanner = new Scanner(Deno.args[1])

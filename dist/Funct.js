@@ -1,4 +1,4 @@
-import Environment from "./Environment.ts";
+import Environment from "./Environment";
 export default class Funct {
     constructor(declaration) {
         this.declaration = declaration;

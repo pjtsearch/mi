@@ -1,6 +1,6 @@
-import print from "./print.ts";
-import trig from "./trig.ts";
-import sqrt from "./sqrt.ts";
+import print from "./print";
+import trig from "./trig";
+import sqrt from "./sqrt";
 export default [
     print,
     trig,

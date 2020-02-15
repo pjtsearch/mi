@@ -1,0 +1,66 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn buildNode
+
+PATH: 
+  /home/pjt/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl
+
+Yarn version: 
+  1.22.0
+
+Node version: 
+  13.7.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  SyntaxError: /home/pjt/bin/node-projects/ts-math-interpreter/package.json: Unexpected token 
+   in JSON at position 615
+      at JSON.parse (<anonymous>)
+      at /usr/lib/node_modules/yarn/lib/cli.js:1625:59
+      at Generator.next (<anonymous>)
+      at step (/usr/lib/node_modules/yarn/lib/cli.js:310:30)
+      at /usr/lib/node_modules/yarn/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "mi",
+    "version": "0.2.1",
+    "description": "Math interpreter made with TS",
+    "main": "dist/index.js",
+    "module": "dist/esm.js",
+    "directories": {
+      "test": "test"
+    },
+    "scripts": {
+      "test": "deno ./test/index.ts",
+      "build":"deno bundle ./src/index.ts ./dist/index.js",
+      "buildESM":"npm run build && cp ./dist/index.js ./dist/esm.js && sed -i 's/instantiate(\"index\")/export default instantiate(\"index\").default/g' ./dist/esm.js",
+      "start":"deno --allow-read ./bin/cli.ts",
+      "buildNode":"cp -r ./src ./tmp && find . -type f -name '*.ts' -exec sed -i 's/import/\\/\\/@ts-ignore\
+      import/g' {} + && tsc -p ./node-tsconfig.json"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/pjtsearch/ts-math-interpreter.git"
+    },
+    "keywords": [
+      "math",
+      "interpreter",
+      "mi",
+      "algebra",
+      "language"
+    ],
+    "author": "PJTSearch",
+    "license": "GPL-3.0",
+    "bugs": {
+      "url": "https://github.com/pjtsearch/ts-math-interpreter/issues"
+    },
+    "homepage": "https://github.com/pjtsearch/ts-math-interpreter#readme"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

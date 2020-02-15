@@ -1,10 +1,10 @@
-import TokenType from "./TokenType.ts";
-import Expr from "./Expr.ts";
-import Stmt from "./Stmt.ts";
-import Environment from "./Environment.ts";
-import Funct from "./Funct.ts";
-import { InterpreterError } from "./Error.ts";
-import standardLib from "./standard-lib/index.ts";
+import TokenType from "./TokenType";
+import Expr from "./Expr";
+import Stmt from "./Stmt";
+import Environment from "./Environment";
+import Funct from "./Funct";
+import { InterpreterError } from "./Error";
+import standardLib from "./standard-lib/index";
 let { NUMBER, VARIABLE, STRING, LEFT_PAREN, RIGHT_PAREN, CIRCUMFLEX, STAR, SLASH, PLUS, MINUS, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, IMPORT } = TokenType;
 export default class Interpreter {
     constructor(statements, source, options) {
