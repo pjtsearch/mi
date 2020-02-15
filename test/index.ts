@@ -7,10 +7,5 @@ import * as standardLib from "./standard-lib.ts"
 const v = Object.values
 let tests = [...v(literal),...v(grouping),...v(variable),...v(funct),...v(standardLib)]
 
-import {
-  runTests,
-  test
-} from "https://deno.land/std/testing/mod.ts";
-
-tests.forEach(fn=>test(fn))
-runTests()
+tests.forEach(fn=>Deno.test(fn))
+Deno.runTests()
