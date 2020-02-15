@@ -11,7 +11,8 @@
     "test": "deno ./test/index.ts",
     "build":"deno bundle ./src/index.ts ./dist/index.js",
     "buildESM":"npm run build && cp ./dist/index.js ./dist/esm.js && sed -i 's/instantiate(\"index\")/export default instantiate(\"index\").default/g' ./dist/esm.js",
-    "start":"deno --allow-read ./bin/cli.ts"
+    "start":"deno --allow-read ./bin/cli.ts",
+    "buildNode":"tsc ./src/**/* --outDir ./dist"
   },
   "repository": {
     "type": "git",
